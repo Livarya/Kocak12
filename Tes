@@ -1,0 +1,18 @@
+//Mendefinisikan sebuah kata
+class Mobil {
+    //construct inisialisasi properti
+    constructor(merek, model, tahun){
+        this.merek = merek;
+        this.model = model;
+        this.tahun = tahun;
+    }
+
+    tampilkanmobil(){
+        console.log(`Mobil ini adalah ${this.merek} ${this.model} ${this.tahun}`);
+    }
+}
+
+//membuat object dari class mobil
+let mobil1 = new Mobil("Toyota","Avanza", 2022);
+let mobil2 = new Mobil("Nissan","GTR", 2001)
+//panggil method mobil1

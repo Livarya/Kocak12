@@ -1,0 +1,152 @@
+import 'package:flutter/material.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Kalkulator Telepon',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const KalkulatorPage(),
+    );
+  }
+}
+
+class KalkulatorPage extends StatefulWidget {
+  const KalkulatorPage({super.key});
+
+  @override
+  _KalkulatorPageState createState() => _KalkulatorPageState();
+}
+
+class _KalkulatorPageState extends State<KalkulatorPage> {
+  String input1 = ''; 
+  String input2 = ''; 
+  String result = ''; 
+
+  // Fungsi untuk menghitung hasil
+  void calculateResult(String operation) {
+    double num1 = double.tryParse(input1) ?? 0;
+    double num2 = double.tryParse(input2) ?? 0;
+
+    setState(() {
+      if (operation == '+') {
+        result = (num1 + num2).toString();
+      } else if (operation == '-') {
+        result = (num1 - num2).toString();
+      } else if (operation == '*') {
+        result = (num1 * num2).toString();
+      } else if (operation == ':') {
+        if (num2 != 0) {
+          result = (num1 / num2).toString();
+        } else {
+          result = 'Error'; 
+        }
+      }
+    });
+  }
+
+
+  void clearInput() {
+    setState(() {
+      input1 = '';
+      input2 = '';
+      result = '';
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Kalkulator Telepon'),
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          children: [
+           
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Angka 1',
+                  ),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (value) {
+                    setState(() {
+                      input1 = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+           
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                TextField(
+                  decoration: const InputDecoration(
+                    labelText: 'Angka 2',
+                  ),
+                  keyboardType: TextInputType.numberWithOptions(decimal: true),
+                  onChanged: (value) {
+                    setState(() {
+                      input2 = value;
+                    });
+                  },
+                ),
+                const SizedBox(height: 20),
+                
+                Row(
+                  children: [
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => calculateResult('+'),
+                        child: const Text('+'),
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => calculateResult('-'),
+                        child: const Text('-'),
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => calculateResult('*'),
+                        child: const Text('*'),
+                      ),
+                    ),
+                    Expanded(
+                      child: ElevatedButton(
+                        onPressed: () => calculateResult(':'),
+                        child: const Text(':'),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            // Display the result
+            if (result.isNotEmpty) 
+              Text(
+                'Hasil: $result',
+                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}

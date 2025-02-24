@@ -1,0 +1,64 @@
+import express from 'express';
+const app = express();
+app.use(express.json());
+
+let users = [
+    {id: 1, name: 'John', email: 'john@gmail.com', kelas: '12A', fakultas: 'Fakultas Ilmu Komputer', sekolah: 'SMA Negeri 1 Jakarta'},
+    {id: 2, name: 'Doe', email: 'doe@gmail.com', kelas: '12B', fakultas: 'Fakultas Ekonomi', sekolah: 'SMA Negeri 2 Bandung'},
+    {id: 3, name: 'Smith', email: 'smith@gmail.com', kelas: '11A', fakultas: 'Fakultas Teknik', sekolah: 'SMA Negeri 3 Surabaya'}
+];
+
+app.get('/api/users', (_, res) => {
+    res.json(users);
+});
+
+app.get('/api/users/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const user = users.find(user => user.id === id);
+    if(!user) {
+        return res.status(404).json({message: 'User not found'});
+    }
+    res.json(user);
+});
+
+app.post('/api/users', (req, res) => {
+    const {name, email, kelas,fakultas,sekolah} = req.body;
+    const newUser = {
+        id: users.length + 1,
+        name,
+        email,
+        kelas,
+        fakultas,
+        sekolah,
+    };
+    users.push(newUser);
+    res.status(201).json(newUser);
+});
+
+app.put('/api/users/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    const {name, email, kelas,fakultas,sekolah} = req.body;
+
+    let user = users.find(user => user.id === id);
+    if(!user) {
+        return res.status(404).json({message: 'User not found'});
+    }
+
+    user.name = name;
+    user.email = email;
+    user.kelas = kelas;
+    user.name = fakultas;
+    user.name = sekolah;
+    res.json(user);
+});
+
+app.delete('/api/users/:id', (req, res) => {
+    const id = parseInt(req.params.id);
+    users = users.filter(user => user.id !== id);
+    res.status(204).send();
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Server berjalan pada http://localhost:${PORT}`);
+});

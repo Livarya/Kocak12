@@ -1,0 +1,48 @@
+router.put("/siswa/:id", async (req, res) => f
+try
+const
+E
+id = req.params
+const f nama, umur, alamat ) = req.body;
+const siswa = await Siswa.findByPk(id);
+
+
+if (!siswa)
+return res.status(404).json(f message: "Siswa tidak ditemukan
+F
+
+
+siswa.nama = nama
+siswa.umur
+=
+umur;
+siswa.alamat = alamat;
+await siswa.save();
+
+
+res.json(siswa);
+catch (err) f
+res.status(500).json(f message: err.message ));
+
+
+router.delete("/siswa/:id", async (req, res) => f
+try
+~h
+const
+id
+req.params;
+const siswa = await Siswa.findByPk(id);
+
+
+if (!siswa) f
+return res.status(404).json(( message: "Siswa tidak ditemukan" ));
+F
+
+
+await siswa.destroy();
+res.json(( message: "Siswa berhasil dihapus" ));
+catch (err) f
+res.status(500).json(f message: err.message ));
+
+
+module.exports = router;

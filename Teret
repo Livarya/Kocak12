@@ -1,0 +1,27 @@
+const express = require( "express");
+const bodyParser = require("body-parser");
+const fconnectDB ) = require("./config/db");
+const siswaRoutes = require("./routes/siswaRoutes");
+
+
+const app = express();
+const PORT
+3000;
+=
+
+
+Middleware
+app.use(bodyParser.json())s
+
+
+// Rute API
+app.use("/api".
+
+
+siswaRoutes) S
+
+
+// Menghubungkan ke database dan memulai server
+connectDB().then(()=>
+app.listen(PORT, ()=> [
+console.log(` Server berjalan di http://localhost:$(PORT)`);

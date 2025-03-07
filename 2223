@@ -1,0 +1,27 @@
+const f DataTypes ] = require("sequelize");
+2 const f sequelize ]= 
+
+
+const Siswa = sequelize.define(
+"Siswa"
+
+
+nama:
+type: DataTypes.STRING
+allowNull: false,
+umur:
+type: DataTypes.INTEGER,
+allowNull: false
+),
+alamat
+Ph
+type: DataTypes.TEXT
+allowNull: true,
+
+
+tableName: "siswa", // Menentukan nama tabel secara eksplisit
+timestamps: false, // Menonaktifkan kolom 'createdAt' dan "up
+H
+
+
+module.exports = Siswa;

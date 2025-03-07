@@ -1,0 +1,29 @@
+const express
+const router =
+const Siswa
+11
+
+
+require("express");
+express.Router ();
+require("../models/siswa");
+
+
+// Endpoint untuk mengambil semua data siswa
+router.get("/siswa", async (req, res) => (
+try
+const siswa = await Siswa.findAll();
+res.json(siswa)
+catch (err) f
+res.status(500).json(f message: err.message ));
+S
+
+
+// Endpoint untuk menambah data siswa
+router.post("/siswa", async (req, res) => 1
+try
+const f nama, umur, alamat ) = req.body;
+const siswa = await Siswa.create(f nama, umur.
+res.status(201).json(siswa);
+catch (err)
+res.status(500).json(f message: err.message

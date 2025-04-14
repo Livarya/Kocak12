@@ -1,0 +1,101 @@
+const express = require('express');
+const mysql2 = require('mysql2');
+const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+
+const app = express();
+const port = 3000;
+
+// Middleware untuk parsing JSON
+app.use(express.json());
+
+// Koneksi ke database MySQL
+const db = mysql2.createConnection({
+    host: 'localhost',
+    user: 'root',
+    password: '',
+    database: 'auth_api'
+});
+
+db.connect(err => {
+    if (err) {
+        console.error('❌ Error connecting to the database:', err);
+        return;
+    }
+    console.log('✅ Connected to the database.');
+});
+
+// Endpoint Registrasi
+app.post('/register', async (req, res) => {
+    const { username, email, password } = req.body;
+
+    if (!username || !email || !password) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error.' });
+        }
+
+        if (results.length > 0) {
+            return res.status(400).json({ message: 'Email already exists.' });
+        }
+
+        // Hash password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Simpan user ke database
+        db.query(
+            'INSERT INTO users (username, email, password) VALUES (?, ?, ?)',
+            [username, email, hashedPassword],
+            (err, results) => {
+                if (err) {
+                    return res.status(500).json({ message: 'Error registering user.' });
+                }
+
+                res.status(201).json({ message: 'User registered successfully.' });
+            }
+        );
+    });
+});
+
+// Endpoint Login
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json({ message: 'All fields are required.' });
+    }
+
+    db.query('SELECT * FROM users WHERE email = ?', [email], async (err, results) => {
+        if (err) {
+            return res.status(500).json({ message: 'Database error.' });
+        }
+        if (results.length === 0) {
+            return res.status(400).json({ message: 'User not found.' });
+        }
+
+        const user = results[0];
+
+        // Verifikasi password
+        const isMatch = await bcrypt.compare(password, user.password);
+        if (!isMatch) {
+            return res.status(400).json({ message: 'Invalid credentials.' });
+        }
+
+        // Generate JWT token
+        const token = jwt.sign(
+            { id: user.id, username: user.username, email: user.email },
+            'your_jwt_secret', // Ganti dengan secret yang lebih kuat dan simpan di .env
+            { expiresIn: '1h' }
+        );
+
+        res.json({ message: 'Login successful.', token });
+    });
+});
+
+// Menjalankan server
+app.listen(port, () => {
+    console.log(`🚀 Server running on http://localhost:${port}`);
+});
